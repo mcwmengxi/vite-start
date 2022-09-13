@@ -1,0 +1,8 @@
+:root {
+  --globalColor: purple;
+}
+
+div {
+  background-color: purple;
+  background-color: var(--globalColor);
+}
