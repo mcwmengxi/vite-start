@@ -3,6 +3,7 @@ import viteBaseConfig from "./config/vite.base.config";
 import viteDevConfig from "./config/vite.dev.config";
 import viteProdConfig from "./config/vite.prod.config";
 
+import "./path";
 // 策略模式
 const envResolver = {
   serve: () => {
@@ -17,10 +18,10 @@ const envResolver = {
 
 export default defineConfig(({ command, mode }) => {
   console.log("command and mode", command, mode);
-  console.log("process", process.env);
+  // console.log("process", process.env);
   console.log("current_content", process.cwd());
   const env = loadEnv(mode, process.cwd(), "");
-  console.log("env_: ", env);
+  // console.log("env_: ", env);
   return envResolver[command]();
 });
 // 1.viteConfig增加语法提示

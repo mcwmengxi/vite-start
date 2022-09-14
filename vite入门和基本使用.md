@@ -424,7 +424,7 @@ const postcssPresetEnv = require("postcss-preset-env");
 module.exports = {
   plugins: [
     postcssPresetEnv({
-      importFrom: path.resolve(__dirname, "./variables.css"),
+      importFrom: path.resolve(__dirname, "./variables.css"),// 变量需要存储起来，不是按需解析
     }),
   ],
 };
@@ -459,4 +459,25 @@ export default defineConfig({
   },
 });
 ```
+
+### 十、vite处理静态资源
+
+```js
+import queshenPic from "@/assets/images/queshen.png";
+// /queshen.png?raw 以原始的二进制读取
+console.log("pic ==> ", queshenPic);
+const imgEl = document.createElement("img");
+imgEl.src = queshenPic;
+document.body.append(imgEl);
+
+import json, { prefix } from "@/assets/json/index.json";
+// 按需引入，树摇优化
+console.log("json ==> ", json, prefix, JSON.stringify(json));
+```
+
+
+
+**path.resolve 和模块化原理**
+
+node端读取文件对于相对路径会用process.cwd()方法去拼接
 

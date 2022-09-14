@@ -1,10 +1,18 @@
 import { defineConfig } from "vite";
 import postcssPresetEnv from "postcss-preset-env";
+import path from "path";
+
 export default defineConfig({
   optimizeDeps: {
     exclude: [], // 指定不参与预构建的依赖
   },
   envPrefix: "YMY_",
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "../src"),
+      "@assets": path.resolve(__dirname, "../src/assets"),
+    },
+  },
   css: {
     // modules配置最终会丢给postcss modules
     modules: {
