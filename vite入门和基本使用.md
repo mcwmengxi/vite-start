@@ -475,9 +475,60 @@ import json, { prefix } from "@/assets/json/index.json";
 console.log("json ==> ", json, prefix, JSON.stringify(json));
 ```
 
+**svg图片使用**
+
+```js
+import svgIcon from "./assets/images/queshen.svg?url";
+import svgRaw from "./assets/images/queshen.svg?raw";
+
+console.log("svgIcon", svgIcon, svgRaw);
+// 第一种使用svg的方式
+document.body.innerHTML = svgRaw;
+const svgElement = document.getElementsByTagName("svg")[0];
+
+svgElement.onmouseenter = function() {
+    // 而是fill属性
+    this.style.fill = "red";
+}
+
+// 第二种加载svg的方式
+// const img = document.createElement("img");
+// img.src = svgIcon;
+// document.body.appendChild(img);
+
+```
+
+
+
+**构建生产环境**
+
+> 利用好hash算法 ,可以更好的去控制浏览器的缓存机制
+
+```js
+  // 构建生产版本
+  build: {
+    rollupOptions: {
+      output: {
+        // 静态资源文件名hash化
+        assetFileNames: "[hash].[name].[ext]",
+      },
+    },
+    outDir: "static", // 配置输出目录
+    assetsDir: "public", // 配置输出目录中的静态资源目录
+    // base64处理限制
+    assetsInlineLimit: 4096,
+    emptyOutDir: true, // 清除输出目录中的所有文件
+  },
+```
+
 
 
 **path.resolve 和模块化原理**
 
 node端读取文件对于相对路径会用process.cwd()方法去拼接
 
+### 十一、vite插件
+
+> 借助vite插件在vite的各个生命周期生效并实现不同的功能
+
+webpack ===>  清除输出目录,`clear-webpack-plugin`
