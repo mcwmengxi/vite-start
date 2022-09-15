@@ -13,4 +13,5 @@ console.log("count", _);
 console.log("import.meta.env_", import.meta.env);
 console.log("lodash_es", lodashES);
 
-import "./src/resourceLoader";
+import "@/resourceLoader";
+import "@/svgLoader";
