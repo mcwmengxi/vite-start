@@ -44,4 +44,18 @@ export default defineConfig({
       plugins: [postcssPresetEnv()],
     },
   },
+  // 构建生产版本
+  build: {
+    rollupOptions: {
+      output: {
+        // 静态资源文件名hash化
+        assetFileNames: "[hash].[name].[ext]",
+      },
+    },
+    outDir: "static", // 配置输出目录
+    assetsDir: "public", // 配置输出目录中的静态资源目录
+    // base64处理限制
+    assetsInlineLimit: 4096,
+    emptyOutDir: true, // 清除输出目录中的所有文件
+  },
 });
