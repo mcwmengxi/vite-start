@@ -1,18 +1,26 @@
 import { defineConfig } from "vite";
 import postcssPresetEnv from "postcss-preset-env";
 import path from "path";
+import { createHtmlPlugin } from "vite-plugin-html";
+// 自动扫描src下的目录生成别名
+import { ViteAliases } from "vite-aliases";
+import { viteMockServe } from "vite-plugin-mock";
+import MyVitePluginHtml from "../plugins/vitePluginHtml";
+import MyViteAliases from "../plugins/viteAliases";
+import MyVitePluginMock from "../plugins/vitePluginMock";
 
+// ToDo 此处换成导出函数会配置出错，待修复
 export default defineConfig({
   optimizeDeps: {
     exclude: [], // 指定不参与预构建的依赖
   },
   envPrefix: "YMY_",
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "../src"),
-      "@assets": path.resolve(__dirname, "../src/assets"),
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     "@": path.resolve(__dirname, "../src"),
+  //     "@assets": path.resolve(__dirname, "../src/assets"),
+  //   },
+  // },
   css: {
     // modules配置最终会丢给postcss modules
     modules: {
@@ -58,4 +66,41 @@ export default defineConfig({
     assetsInlineLimit: 4096,
     emptyOutDir: true, // 清除输出目录中的所有文件
   },
+  plugins: [
+    // ViteAliases(),
+    MyViteAliases(),
+    MyVitePluginMock(),
+    MyVitePluginHtml({
+      inject: {
+        data: {
+          title: 'ymy',
+          // injectScript: `<script src="./inject.js"></script>`,
+        }
+      }
+    }),
+    // createHtmlPlugin({
+    //     /**
+    //      * 在这里写entry后，你将不需要在`index.html`内添加 script 标签，原有标签需要删除
+    //      * @default src/main.ts
+    //      */
+    //     entry: "main.js",
+    //     /**
+    //      * 如果你想将 `index.html`存放在指定文件夹，可以修改它，否则不需要配置
+    //      * @default index.html
+    //      */
+    //     template: "index.html",
+    //     /**
+    //      * 需要注入 index.html ejs 模版的数据
+    //      */
+    //     inject: {
+    //       data: {
+    //         title: "ymy"
+    //       }
+    //     }
+    // }),
+    viteMockServe({
+      mockPath: "/mock", 
+      localEnabled: true,
+    })
+  ]
 });

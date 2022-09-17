@@ -11,7 +11,7 @@ app.use(async (ctx) => {
     const context = await fs.promises.readFile(
       path.resolve(__dirname, "./index.html")
     );
-    console.log(context.toString());
+    // console.log(context.toString());
     ctx.response.body = context;
     ctx.response.set("Content-Type", "text/html");
   }
@@ -28,7 +28,7 @@ app.use(async (ctx) => {
       path.resolve(__dirname, "./App.vue")
     );
     // ast语法分析 --> Vue.createElement() 构建原生dom
-    console.log(VueContent.toString());
+    // console.log(VueContent.toString());
   }
   if (ctx.request.url.endsWith(".js")) {
     const JsContent = await fs.promises.readFile(
