@@ -16,24 +16,21 @@ console.log("lodash_es", lodashES);
 import "@/resourceLoader.js";
 import "@/svgLoader.js";
 
-fetch('/api/list',{
-    method: 'post'
-}).then((data)=>{
-    // console.log(data);
-})
 fetch("/api/user", {
-    method: "post",
-    data: {
-        id: 13,
-        name:'ymy'
-    }
-  }).then(data => {
-    // console.log("data", data);
-  }).catch(error => {
-    console.log("error", error);
-  })
-fetch('/api/get?id=12',{
-    method: 'get',
-}).then((data)=>{
-    // console.log(data);
+  method: "post",
+  data: {
+    id: 13,
+    name: "ymy",
+  },
 })
+  .then((data) => {
+    // console.log("data", data);
+  })
+  .catch((error) => {
+    console.log("error", error);
+  });
+fetch("/api/get?id=12", {
+  method: "get",
+}).then((data) => {
+  // console.log(data);
+});

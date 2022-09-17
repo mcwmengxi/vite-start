@@ -73,10 +73,10 @@ export default defineConfig({
     MyVitePluginHtml({
       inject: {
         data: {
-          title: 'ymy',
+          title: "ymy",
           // injectScript: `<script src="./inject.js"></script>`,
-        }
-      }
+        },
+      },
     }),
     // createHtmlPlugin({
     //     /**
@@ -98,9 +98,9 @@ export default defineConfig({
     //       }
     //     }
     // }),
-    viteMockServe({
-      mockPath: "/mock", 
-      localEnabled: true,
-    })
-  ]
+    // viteMockServe({
+    //   mockPath: "/mock",
+    //   localEnabled: true,
+    // })
+  ],
 });
