@@ -1,4 +1,4 @@
-import moduleB from "./b.module.css";
+import moduleB from "./style/b.module.css";
 
 const nodeEle = document.createElement("div");
 console.log("moduleB", moduleB);

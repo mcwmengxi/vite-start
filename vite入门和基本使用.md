@@ -589,3 +589,73 @@ module.exports = () => {
     }
 }
 ```
+
+### 十二、支持ts
+
+`pnpm i typescript -D`
+
+借助`vite-plugin-checker`插件将ts错误输出到控制台
+
+```js
+import checker from "vite-plugin-checker";
+
+plugins: [
+    checker({
+      'typescript': true
+    })
+  ],
+```
+
+配置`tsconfig.json`的检测规则
+
+`tsc --noEmit && vite build` 打包前进行类型检查
+
+### 十三、性能优化
+
+- 开发时构建速度优化 `dev`命令时长
+	- webpack4 cacahe-loader(webpack5 cache选项 构建代码无变化，使用缓存) thread-loader开启多线程构建
+	- vite 按需加载，不用太关心这块优化
+- 页面性能，代码层面优化
+
+	- 首屏渲染时长 fcp(first content paint)
+		- 懒加载
+        - http优化 协商缓存、强缓存
+    ```text
+        强缓存：服务端给响应头追加一些字段(expires),客户端会记住这些字段，在expires(截止失效时间)没有到达之前，无论你怎么刷新页面，浏览器都不会重新请求页面，而是从缓存里取.
+	  
+        协商缓存：是否使用缓存要跟后端商量一下，当服务端给我们打上协商缓存的标记以后，客户端在下次刷新页面需要重新请求资源时会发送一个协商请求给到服务端，服务端如果说需要变化则会响应具体的内容，如果服务端觉得没变化则会响应304
+    ```
+	- 页面中最大加载时长 lcp
+- js逻辑
+	- 副作用清除 定时器清除(组件频繁销毁)、事件监听
+    ```js
+    `const [timer,setTimer]useState(null);
+    `useEffect(()=>{
+    ``setTimer(setTimeout(()=>{}));
+    ``return ()=clearTimeout timer)
+    `}
+    ```
+	- 我们在写法上一个注意事项：requestAnimationFrame,requestIdleCallback 控制浏览器帧率
+		- 浏览器的帧率：16.6ms去更新-次(执行js逻辑以及重排重绘..，)，如果js执行时长超过一帧，就会丢帧
+		- concurrent mode (concurrency) 可终端渲染 react提供
+	- 防抖节流，lodash js工具Array.prototype.forEach
+    ```js
+        const arr=[);//几千条
+        arr,forEach//不要用arr,forEach lodash,forEach
+    ```
+    - 作用域控制
+    ```js
+        const arr [1,2,3];//由近到远
+        for(let i=0,len arr.length;i<len;i++){}
+    ```
+- css 
+	- 关注继承属性：能继承的旧不要重复写
+	- 尽量避免太过于深的css嵌套：
+- 构建优化 vite(rollup) webpack
+	- 优化体积：压缩、treeshaking、图片资源压缩、cdn加载、分包
+
+**分包策略**
+
+> 浏览器的缓存策路
+> 静态资源-->名字没有变化，那么他就不会重新去拿XXX.jS
+> hash:只要内容有一丁点的变化，hash字符串完全不一样

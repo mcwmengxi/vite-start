@@ -5,6 +5,7 @@ import { createHtmlPlugin } from "vite-plugin-html";
 // 自动扫描src下的目录生成别名
 import { ViteAliases } from "vite-aliases";
 import { viteMockServe } from "vite-plugin-mock";
+import checker from "vite-plugin-checker";
 import MyVitePluginHtml from "../plugins/vitePluginHtml";
 import MyViteAliases from "../plugins/viteAliases";
 import MyVitePluginMock from "../plugins/vitePluginMock";
@@ -55,9 +56,19 @@ export default defineConfig({
   // 构建生产版本
   build: {
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "../index.html"),
+        product: path.resolve(__dirname, "../nested/main2.html"),
+      },
       output: {
         // 静态资源文件名hash化
-        assetFileNames: "[hash].[name].[ext]",
+        assetFileNames: "[name].[hash].[ext]",
+        manualChunks: (id) => {
+          // console.log("id", id);
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
       },
     },
     outDir: "static", // 配置输出目录
@@ -102,5 +113,8 @@ export default defineConfig({
     //   mockPath: "/mock",
     //   localEnabled: true,
     // })
+    checker({
+      typescript: true,
+    }),
   ],
 });
