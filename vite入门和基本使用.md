@@ -659,3 +659,91 @@ plugins: [
 > 浏览器的缓存策路
 > 静态资源-->名字没有变化，那么他就不会重新去拿XXX.jS
 > hash:只要内容有一丁点的变化，hash字符串完全不一样
+
+```js
+  // 构建生产版本
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "../index.html"),
+        product: path.resolve(__dirname, "../nested/main2.html"),
+      },
+      output: {
+        // 静态资源文件名hash化
+        assetFileNames: "[name].[hash].[ext]",
+        manualChunks: (id) => {
+          // console.log("id", id);
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+    },
+    outDir: "static", // 配置输出目录
+    assetsDir: "public", // 配置输出目录中的静态资源目录
+    // base64处理限制
+    assetsInlineLimit: 4096,
+    emptyOutDir: true, // 清除输出目录中的所有文件
+  },
+```
+
+**gzip压缩**
+
+> 将所有的静态文件进行压缩，已达到减少体积的目的
+> 服务端->压缩文件  客户端收到压缩包一>解压缩
+> chunk块：从入口文件到他的一系列依赖最终打包成的jS文件叫做块
+
+- 块最终会映射成js文件，但是块不是js文件
+
+- 服务端读取gzip文件(.gz后缀)设置一个响应头儿content-encoding->gzip(代表告诉浏览器该文件是使用gzip压缩过的)
+
+- 浏览器收到响应结果发现响应头里有gz对应字段，赶紧解压得到js文件（浏览器是要承担一定的解压时间的）
+
+- 如果体积不是很大的话不要用gz1p压缩
+
+  viteCompression
+
+**动态导入**
+
+> webpack与vite构建原理的差别
+> vite是按需加载
+> 动态导入和按需加载是异曲同工, 动态导入是es6的一个新特性
+
+```js
+import viteCompression from "vite-plugin-compression";
+viteCompression(),
+```
+
+**cdn加速**
+
+> cdn内容分发网络
+>
+> 没有被封的国外网站访问稍微有点卡，在不翻墙的情况下，尽可能把公共依赖放在cdn提速
+
+vue lodash vue-router 压缩代码js
+
+将依赖的第三方模块全部写成cdn的形式，然后保证自己代码的一个小体积（体积小服务器和客户端的传输压力就没那么大）
+
+```js
+
+import importToCDN from "vite-plugin-cdn-import";
+importToCDN({
+      modules: [
+        {
+          name: "lodash",
+          var: "_",
+          path: "https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js",
+        },
+      ],
+    }),
+```
+
+
+
+https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js
+
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a7e9c43dc6324a28979684d1c963ac16~tplv-k3u1fbpfcp-watermark.image?)
+
+替换后
+
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a44bb9427fd441089e477f1a04258dfd~tplv-k3u1fbpfcp-watermark.image?)
